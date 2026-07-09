@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Librería Online — Inicio</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="marca">
+      <span class="icono">📚</span>
+      <span>Librería Online</span>
+    </div>
+    <nav class="app-nav">
+      <a href="index.html" class="activo">Inicio</a>
+      <a href="pages/libros.html" id="nav-libros" style="display:none;">Libros</a>
+      <a href="pages/ventas.html" id="nav-ventas" style="display:none;">Ventas</a>
+    </nav>
+  </header>
+
+  <main class="contenedor">
+    <div class="card" id="card-login">
+      <h2>🔐 Acceder o crear cuenta</h2>
+      <p class="subtitulo-seccion">El administrador usa la cuenta fija. Cada cliente puede crear su propia cuenta.</p>
+      <form id="form-login" class="form-grid">
+        <div class="campo">
+          <label for="login-usuario">Correo</label>
+          <input id="login-usuario" required placeholder="tu@correo.com" />
+        </div>
+        <div class="campo">
+          <label for="login-password">Contraseña</label>
+          <input id="login-password" type="password" required placeholder="Tu contraseña" />
+        </div>
+        <div class="campo" style="justify-content:flex-end;">
+          <button class="btn btn-primario" type="submit">Entrar</button>
+          <button class="btn btn-secundario" type="button" id="btn-crear-cuenta">Crear cuenta</button>
+        </div>
+      </form>
+      <div class="alerta" id="alerta-login"></div>
+    </div>
+
+    <div class="card" id="card-registro" style="display:none;">
+      <h2>📝 Crear nueva cuenta</h2>
+      <p class="subtitulo-seccion">Ingresa tu correo y crea una contraseña para entrar como cliente.</p>
+      <form id="form-registro" class="form-grid">
+        <div class="campo">
+          <label for="registro-correo">Correo</label>
+          <input id="registro-correo" type="email" required placeholder="cliente@correo.com" />
+        </div>
+        <div class="campo">
+          <label for="registro-password">Contraseña</label>
+          <input id="registro-password" type="password" required placeholder="Crea una contraseña" />
+        </div>
+        <div class="campo" style="justify-content:flex-end;">
+          <button class="btn btn-acento" type="submit">Registrar cuenta</button>
+          <button class="btn btn-secundario" type="button" id="btn-volver-login">Volver al login</button>
+        </div>
+      </form>
+      <div class="alerta" id="alerta-registro"></div>
+    </div>
+
+    <div id="contenido-app" style="display:none;">
+      <h1 class="titulo-seccion">👋 Bienvenido</h1>
+      <p class="subtitulo-seccion">Resumen general de tu librería.</p>
+
+    <div class="metricas" id="metricas"></div>
+
+    <div class="card">
+      <h2>📚 Catálogo de libros</h2>
+      <div id="contenedor-catalogo">
+        <div class="estado-vacio">
+          <span class="icono">⏳</span>
+          Cargando catálogo...
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🏆 Libros más vendidos</h2>
+      <div id="contenedor-mas-vendidos">
+        <div class="estado-vacio">
+          <span class="icono">⏳</span>
+          Cargando datos...
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🚀 Accesos rápidos</h2>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <a href="pages/libros.html" class="btn btn-primario" style="text-decoration:none;" id="link-libros">Gestionar libros</a>
+        <a href="pages/ventas.html" class="btn btn-acento" style="text-decoration:none;" id="link-ventas">Registrar una venta</a>
+        <button class="btn btn-secundario" id="btn-cerrar-sesion" type="button">Cerrar sesión</button>
+      </div>
+    </div>
+    </div>
+  </main>
+
+  <footer>
+    Sistema de Venta de Libros · Arquitectura en capas · Flask + SQLite
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script>
+    const formLogin = document.getElementById("form-login");
+    const alertaLogin = document.getElementById("alerta-login");
+    const cardLogin = document.getElementById("card-login");
+    const cardRegistro = document.getElementById("card-registro");
+    const contenidoApp = document.getElementById("contenido-app");
+    const linkLibros = document.getElementById("link-libros");
+    const linkVentas = document.getElementById("link-ventas");
+    const navLibros = document.getElementById("nav-libros");
+    const navVentas = document.getElementById("nav-ventas");
+    const btnCerrarSesion = document.getElementById("btn-cerrar-sesion");
+    const metricas = document.getElementById("metricas");
+    const contenedorCatalogo = document.getElementById("contenedor-catalogo");
+    let librosCatalogo = [];
+
+    function mostrarAlertaLogin(mensaje, tipo = "error") {
+      alertaLogin.textContent = mensaje;
+      alertaLogin.className = `alerta mostrar ${tipo}`;
+    }
+
+    function actualizarVistaSegunRol(user) {
+      if (!user) {
+        cardLogin.style.display = "block";
+        cardRegistro.style.display = "none";
+        contenidoApp.style.display = "none";
+        linkLibros.style.display = "none";
+        linkVentas.style.display = "none";
+        navLibros.style.display = "none";
+        navVentas.style.display = "none";
+        return;
+      }
+      cardLogin.style.display = "none";
+      cardRegistro.style.display = "none";
+      contenidoApp.style.display = "block";
+      if (user.role === "cliente") {
+        linkLibros.style.display = "none";
+        linkVentas.style.display = "none";
+        navLibros.style.display = "none";
+        navVentas.style.display = "none";
+      } else {
+        linkLibros.style.display = "inline-block";
+        linkVentas.style.display = "inline-block";
+        navLibros.style.display = "inline";
+        navVentas.style.display = "inline";
+      }
+    }
+
+    function renderizarMetricas(user, libros) {
+      if (user && user.role === "admin") {
+        metricas.innerHTML = `
+          <div class="metrica">
+            <div class="valor">${libros.length}</div>
+            <div class="etiqueta">Libros en catálogo</div>
+          </div>
+          <div class="metrica">
+            <div class="valor" id="valor-total-vendido">—</div>
+            <div class="etiqueta">Total vendido (S/)</div>
+          </div>
+          <div class="metrica">
+            <div class="valor" id="valor-total-ventas">—</div>
+            <div class="etiqueta">Ventas registradas</div>
+          </div>`;
+        return;
+      }
+
+      metricas.innerHTML = `
+        <div class="metrica">
+          <div class="valor">${libros.length}</div>
+          <div class="etiqueta">Libros en catálogo</div>
+        </div>
+        <div class="metrica">
+          <div class="valor">�</div>
+          <div class="etiqueta">Consulta disponibilidad y precios</div>
+        </div>`;
+    }
+
+    function renderizarCatalogo(libros) {
+      librosCatalogo = libros;
+      if (libros.length === 0) {
+        contenedorCatalogo.innerHTML = `
+          <div class="estado-vacio">
+            <span class="icono">📭</span>
+            No hay libros disponibles.
+          </div>`;
+        return;
+      }
+
+      contenedorCatalogo.innerHTML = `
+        <div class="tabla-wrapper">
+          <table>
+            <thead>
+              <tr><th>Título</th><th>Autor</th><th>Precio</th><th>Stock</th></tr>
+            </thead>
+            <tbody>
+              ${libros.map(libro => `
+                <tr>
+                  <td>${libro.titulo}</td>
+                  <td>${libro.autor}</td>
+                  <td>S/ ${libro.precio.toFixed(2)}</td>
+                  <td>${libro.stock}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>`;
+    }
+
+    async function cargarDashboard(user) {
+      try {
+        const libros = await ApiLibros.listar();
+        renderizarMetricas(user, libros);
+        renderizarCatalogo(libros);
+
+        if (!user || user.role !== "admin") {
+          document.getElementById("contenedor-mas-vendidos").innerHTML = `
+            <div class="estado-vacio">
+              <span class="icono">📖</span>
+              El cliente puede ver el catálogo y consultar disponibilidad sin acceder a ventas.
+            </div>`;
+          return;
+        }
+
+        const resumenTotal = await ApiVentas.totalVendido();
+        document.getElementById("valor-total-vendido").textContent =
+          resumenTotal.total_vendido.toFixed(2);
+
+        const ventas = await ApiVentas.listar();
+        document.getElementById("valor-total-ventas").textContent = ventas.length;
+
+        const masVendidos = await ApiVentas.masVendidos(5);
+        const contenedor = document.getElementById("contenedor-mas-vendidos");
+
+        if (masVendidos.length === 0) {
+          contenedor.innerHTML = `
+            <div class="estado-vacio">
+              <span class="icono">📭</span>
+              Todavía no hay ventas registradas.
+            </div>`;
+          return;
+        }
+
+        contenedor.innerHTML = `
+          <div class="tabla-wrapper">
+            <table>
+              <thead>
+                <tr><th>Título</th><th>Unidades vendidas</th></tr>
+              </thead>
+              <tbody>
+                ${masVendidos.map(item => `
+                  <tr>
+                    <td>${item.titulo}</td>
+                    <td>${item.total_vendido}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>`;
+      } catch (error) {
+        document.getElementById("contenedor-mas-vendidos").innerHTML = `
+          <div class="estado-vacio">
+            <span class="icono">⚠️</span>
+            No se pudo conectar con la API (${error.message}).<br/>
+            Verifica que el backend esté corriendo en http://127.0.0.1:5000
+          </div>`;
+      }
+    }
+
+    formLogin.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const datos = {
+        username: document.getElementById("login-usuario").value.trim(),
+        password: document.getElementById("login-password").value.trim(),
+      };
+      try {
+        const respuesta = await ApiAuth.login(datos);
+        actualizarVistaSegunRol(respuesta.user);
+        await cargarDashboard(respuesta.user);
+      } catch (error) {
+        mostrarAlertaLogin(error.message, "error");
+      }
+    });
+
+    document.getElementById("btn-crear-cuenta").addEventListener("click", () => {
+      cardLogin.style.display = "none";
+      cardRegistro.style.display = "block";
+      alertaLogin.className = "alerta";
+      alertaLogin.textContent = "";
+    });
+
+    document.getElementById("btn-volver-login").addEventListener("click", () => {
+      cardRegistro.style.display = "none";
+      cardLogin.style.display = "block";
+      alertaLogin.className = "alerta";
+      alertaLogin.textContent = "";
+    });
+
+    document.getElementById("form-registro").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const datos = {
+        username: document.getElementById("registro-correo").value.trim(),
+        password: document.getElementById("registro-password").value.trim(),
+      };
+      try {
+        const respuesta = await ApiAuth.register(datos);
+        document.getElementById("login-usuario").value = datos.username;
+        document.getElementById("login-password").value = datos.password;
+        actualizarVistaSegunRol(respuesta.user);
+        await cargarDashboard(respuesta.user);
+      } catch (error) {
+        const alertaRegistro = document.getElementById("alerta-registro");
+        alertaRegistro.textContent = error.message;
+        alertaRegistro.className = `alerta mostrar error`;
+      }
+    });
+
+    btnCerrarSesion.addEventListener("click", async () => {
+      try {
+        await ApiAuth.logout();
+      } catch (error) {
+        console.error(error);
+      }
+      actualizarVistaSegunRol(null);
+    });
+
+    async function verificarSesion() {
+      try {
+        const respuesta = await ApiAuth.me();
+        actualizarVistaSegunRol(respuesta.user);
+        if (respuesta.user) {
+          await cargarDashboard(respuesta.user);
+        }
+      } catch (error) {
+        actualizarVistaSegunRol(null);
+      }
+    }
+
+    verificarSesion();
+  </script>
+</body>
+</html>

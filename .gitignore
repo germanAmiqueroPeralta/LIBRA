@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Base de datos generada en desarrollo
+backend/database.db
+
+# Entornos virtuales
+venv/
+env/
+.venv/
+
+# VSCode (opcional, puedes quitar esta línea si quieres versionar la config)
+# .vscode/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db

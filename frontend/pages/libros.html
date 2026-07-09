@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Librería Online — Libros</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="marca">
+      <span class="icono">📚</span>
+      <span>Librería Online</span>
+    </div>
+    <nav class="app-nav">
+      <a href="../index.html">Inicio</a>
+      <a href="libros.html" class="activo">Libros</a>
+      <a href="ventas.html">Ventas</a>
+    </nav>
+  </header>
+
+  <main class="contenedor">
+    <h1 class="titulo-seccion">📖 Gestión de libros</h1>
+    <p class="subtitulo-seccion">Registra, busca, edita y elimina libros del catálogo.</p>
+
+    <div class="alerta" id="alerta"></div>
+
+    <div class="card">
+      <h2 id="titulo-formulario">➕ Registrar nuevo libro</h2>
+      <form id="form-libro">
+        <input type="hidden" id="modo-edicion" value="false" />
+        <div class="form-grid">
+          <div class="campo">
+            <label for="isbn">ISBN</label>
+            <input type="text" id="isbn" required placeholder="978-3-16-148410-0" />
+          </div>
+          <div class="campo">
+            <label for="titulo">Título</label>
+            <input type="text" id="titulo" required placeholder="Cien Años de Soledad" />
+          </div>
+          <div class="campo">
+            <label for="autor">Autor</label>
+            <input type="text" id="autor" required placeholder="Gabriel García Márquez" />
+          </div>
+          <div class="campo">
+            <label for="precio">Precio (S/)</label>
+            <input type="number" id="precio" required min="0" step="0.01" placeholder="45.90" />
+          </div>
+          <div class="campo">
+            <label for="stock">Stock</label>
+            <input type="number" id="stock" required min="0" step="1" placeholder="10" />
+          </div>
+          <div class="campo">
+            <label for="categoria">Categoría</label>
+            <input type="text" id="categoria" placeholder="Novela" />
+          </div>
+        </div>
+        <div style="margin-top:1.25rem; display:flex; gap:0.75rem;">
+          <button type="submit" class="btn btn-primario" id="btn-guardar">Guardar libro</button>
+          <button type="button" class="btn btn-secundario" id="btn-cancelar" style="display:none;">Cancelar edición</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>🔎 Catálogo</h2>
+      <div class="buscador">
+        <input type="text" id="input-buscar" placeholder="Buscar por título, autor o categoría..." />
+        <button class="btn btn-primario" id="btn-buscar">Buscar</button>
+      </div>
+
+      <div class="tabla-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ISBN</th>
+              <th>Título</th>
+              <th>Autor</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th>Categoría</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="cuerpo-tabla-libros">
+          </tbody>
+        </table>
+      </div>
+      <div id="estado-vacio-libros"></div>
+    </div>
+  </main>
+
+  <footer>
+    Sistema de Venta de Libros · Arquitectura en capas · Flask + SQLite
+  </footer>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/libros.js"></script>
+</body>
+</html>

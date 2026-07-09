@@ -1,0 +1,400 @@
+/* =========================================================
+   style.css — Librería Online
+   Paleta cálida tipo librería: crema, marrón madera, verde salvia.
+   ========================================================= */
+
+:root {
+  --color-fondo: #faf6f0;
+  --color-superficie: #ffffff;
+  --color-borde: #e8ddd0;
+  --color-texto: #2f2a25;
+  --color-texto-suave: #7a6f63;
+
+  --color-primario: #8b5e3c;
+  --color-primario-oscuro: #6e4a2e;
+  --color-primario-claro: #f1e3d3;
+
+  --color-acento: #5c8a6a;
+  --color-acento-oscuro: #466b52;
+
+  --color-peligro: #c1543c;
+  --color-peligro-fondo: #fbe9e5;
+
+  --color-exito: #3f8c5f;
+  --color-exito-fondo: #e6f4ea;
+
+  --radio: 14px;
+  --radio-chico: 8px;
+  --sombra: 0 4px 16px rgba(60, 45, 25, 0.08);
+  --sombra-hover: 0 8px 24px rgba(60, 45, 25, 0.14);
+
+  --fuente: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--fuente);
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* ---------- Encabezado ---------- */
+header.app-header {
+  background: linear-gradient(135deg, var(--color-primario), var(--color-primario-oscuro));
+  color: #fff;
+  padding: 1.25rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--sombra);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.app-header .marca {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.app-header .marca .icono {
+  font-size: 1.8rem;
+}
+
+nav.app-nav {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+nav.app-nav a {
+  color: #fff;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radio-chico);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background 0.2s ease;
+}
+
+nav.app-nav a:hover,
+nav.app-nav a.activo {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ---------- Contenedor principal ---------- */
+main.contenedor {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1.5rem 3rem;
+}
+
+.titulo-seccion {
+  font-size: 1.6rem;
+  color: var(--color-primario-oscuro);
+  margin-bottom: 0.35rem;
+}
+
+.subtitulo-seccion {
+  color: var(--color-texto-suave);
+  margin-bottom: 1.5rem;
+}
+
+/* ---------- Tarjetas ---------- */
+.card {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: 1.5rem;
+  box-shadow: var(--sombra);
+  margin-bottom: 1.5rem;
+}
+
+.card h2 {
+  font-size: 1.15rem;
+  margin-bottom: 1rem;
+  color: var(--color-primario-oscuro);
+}
+
+/* ---------- Formularios ---------- */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.campo label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+}
+
+.campo input,
+.campo select {
+  padding: 0.6rem 0.75rem;
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-chico);
+  font-size: 0.95rem;
+  font-family: var(--fuente);
+  background: var(--color-fondo);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campo input:focus,
+.campo select:focus {
+  outline: none;
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px var(--color-primario-claro);
+}
+
+/* ---------- Botones ---------- */
+.btn {
+  border: none;
+  border-radius: var(--radio-chico);
+  padding: 0.65rem 1.3rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, background 0.2s ease;
+  font-family: var(--fuente);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primario {
+  background: var(--color-primario);
+  color: #fff;
+}
+
+.btn-primario:hover {
+  background: var(--color-primario-oscuro);
+  box-shadow: var(--sombra-hover);
+}
+
+.btn-acento {
+  background: var(--color-acento);
+  color: #fff;
+}
+
+.btn-acento:hover {
+  background: var(--color-acento-oscuro);
+}
+
+.btn-peligro {
+  background: transparent;
+  color: var(--color-peligro);
+  border: 1.5px solid var(--color-peligro);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.btn-peligro:hover {
+  background: var(--color-peligro-fondo);
+}
+
+.btn-secundario {
+  background: transparent;
+  color: var(--color-primario);
+  border: 1.5px solid var(--color-primario);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.btn-secundario:hover {
+  background: var(--color-primario-claro);
+}
+
+/* ---------- Tablas ---------- */
+.tabla-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  text-align: left;
+  padding: 0.75rem 0.9rem;
+  background: var(--color-primario-claro);
+  color: var(--color-primario-oscuro);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+thead th:first-child { border-radius: var(--radio-chico) 0 0 var(--radio-chico); }
+thead th:last-child { border-radius: 0 var(--radio-chico) var(--radio-chico) 0; }
+
+tbody td {
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--color-borde);
+  font-size: 0.92rem;
+}
+
+tbody tr:hover {
+  background: #fbf7f2;
+}
+
+.stock-bajo {
+  color: var(--color-peligro);
+  font-weight: 700;
+}
+
+.stock-ok {
+  color: var(--color-exito);
+  font-weight: 600;
+}
+
+.acciones-fila {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ---------- Buscador ---------- */
+.buscador {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.buscador input {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-chico);
+  font-size: 0.95rem;
+  font-family: var(--fuente);
+}
+
+.buscador input:focus {
+  outline: none;
+  border-color: var(--color-primario);
+}
+
+/* ---------- Alertas / notificaciones ---------- */
+.alerta {
+  padding: 0.85rem 1.1rem;
+  border-radius: var(--radio-chico);
+  margin-bottom: 1.25rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  display: none;
+}
+
+.alerta.mostrar {
+  display: block;
+}
+
+.alerta.exito {
+  background: var(--color-exito-fondo);
+  color: var(--color-exito);
+  border: 1px solid #b7dcc3;
+}
+
+.alerta.error {
+  background: var(--color-peligro-fondo);
+  color: var(--color-peligro);
+  border: 1px solid #eec3ba;
+}
+
+/* ---------- Métricas (dashboard) ---------- */
+.metricas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.metrica {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  padding: 1.25rem;
+  box-shadow: var(--sombra);
+  text-align: center;
+}
+
+.metrica .valor {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--color-primario);
+}
+
+.metrica .etiqueta {
+  color: var(--color-texto-suave);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+/* ---------- Carrito de venta ---------- */
+.carrito-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--color-borde);
+  font-size: 0.9rem;
+}
+
+.carrito-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-primario-oscuro);
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+  border-top: 2px solid var(--color-primario-claro);
+}
+
+/* ---------- Estado vacío ---------- */
+.estado-vacio {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: var(--color-texto-suave);
+}
+
+.estado-vacio .icono {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* ---------- Pie de página ---------- */
+footer {
+  text-align: center;
+  color: var(--color-texto-suave);
+  font-size: 0.85rem;
+  padding: 1.5rem;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  header.app-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  main.contenedor {
+    margin: 1rem auto;
+  }
+}
