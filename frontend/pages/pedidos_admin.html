@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Librería Online — Pedidos pendientes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="marca">
+      <span class="icono"><i class="fa-solid fa-book"></i></span>
+      <span>Librería Online</span>
+    </div>
+    <nav class="app-nav">
+      <a href="../index.html">Inicio</a>
+      <a href="libros.html">Libros</a>
+      <a href="ventas.html">Ventas</a>
+      <a href="pedidos_admin.html" class="activo">Pedidos</a>
+    </nav>
+  </header>
+
+  <main class="contenedor">
+    <h1 class="titulo-seccion"><i class="fa-solid fa-list-check"></i> Pedidos pendientes</h1>
+    <p class="subtitulo-seccion">Aquí puedes ver los pedidos enviados por los clientes.</p>
+
+    <div class="alerta" id="alerta"></div>
+
+    <div class="card">
+      <div id="contenedor-pedidos">
+        <div class="estado-vacio">
+          <span class="icono"><i class="fa-solid fa-spinner fa-spin"></i></span>
+          Cargando pedidos pendientes...
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    Librería en línea · Control de ventas y pedidos
+  </footer>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/pedidos_admin.js"></script>
+</body>
+</html>

@@ -43,7 +43,7 @@ function renderizarLibros(libros) {
     cuerpoTabla.innerHTML = "";
     estadoVacio.innerHTML = `
       <div class="estado-vacio">
-        <span class="icono">📭</span>
+        <span class="icono"><i class="fa-solid fa-box-open"></i></span>
         No se encontraron libros.
       </div>`;
     return;
@@ -114,7 +114,7 @@ async function editarLibro(isbn) {
 
     campoIsbn.disabled = true; // el ISBN no se puede cambiar al editar
     modoEdicion.value = "true";
-    tituloFormulario.textContent = `✏️ Editando: ${libro.titulo}`;
+    tituloFormulario.textContent = `Editando: ${libro.titulo}`;
     btnGuardar.textContent = "Actualizar libro";
     btnCancelar.style.display = "inline-block";
 

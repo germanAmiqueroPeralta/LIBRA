@@ -4,23 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Librería Online — Ventas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
   <header class="app-header">
     <div class="marca">
-      <span class="icono">📚</span>
+      <span class="icono"><i class="fa-solid fa-book"></i></span>
       <span>Librería Online</span>
     </div>
     <nav class="app-nav">
       <a href="../index.html">Inicio</a>
       <a href="libros.html">Libros</a>
       <a href="ventas.html" class="activo">Ventas</a>
+      <a href="pedidos_admin.html">Pedidos</a>
     </nav>
   </header>
 
   <main class="contenedor">
-    <h1 class="titulo-seccion">🛒 Registrar compra presencial</h1>
+    <h1 class="titulo-seccion"><i class="fa-solid fa-cart-shopping"></i> Registrar compra presencial</h1>
     <p class="subtitulo-seccion">Solo el administrador puede registrar compras presenciales y descontar stock automáticamente.</p>
 
     <div class="alerta" id="alerta"></div>
@@ -46,7 +51,7 @@
       <h2>Carrito</h2>
       <div id="contenedor-carrito">
         <div class="estado-vacio">
-          <span class="icono">🛍️</span>
+          <span class="icono"><i class="fa-solid fa-bag-shopping"></i></span>
           El carrito está vacío.
         </div>
       </div>
@@ -56,10 +61,32 @@
     </div>
 
     <div class="card">
-      <h2>📜 Historial de ventas</h2>
+      <h2><i class="fa-solid fa-file-invoice-dollar"></i> Historial de ventas</h2>
+      <div class="buscador">
+        <div>
+          <label for="select-periodo-historial">Filtrar por</label>
+          <select id="select-periodo-historial">
+            <option value="total">Todos</option>
+            <option value="dia">Día</option>
+            <option value="mes">Mes</option>
+            <option value="anio">Año</option>
+          </select>
+        </div>
+        <div>
+          <label for="input-fecha-historial">Fecha</label>
+          <input type="date" id="input-fecha-historial" />
+        </div>
+        <button class="btn btn-primario" id="btn-filtrar-historial">Filtrar</button>
+      </div>
+      <div class="metricas" style="margin-bottom:1rem;">
+        <div class="metrica">
+          <div class="valor" id="valor-total-filtrado">—</div>
+          <div class="etiqueta">Total de ventas filtradas (S/)</div>
+        </div>
+      </div>
       <div id="contenedor-historial">
         <div class="estado-vacio">
-          <span class="icono">⏳</span>
+          <span class="icono"><i class="fa-solid fa-spinner fa-spin"></i></span>
           Cargando historial...
         </div>
       </div>
@@ -67,7 +94,7 @@
   </main>
 
   <footer>
-    Sistema de Venta de Libros · Arquitectura en capas · Flask + SQLite
+    Librería en línea · Control de ventas y pedidos
   </footer>
 
   <script src="../js/api.js"></script>

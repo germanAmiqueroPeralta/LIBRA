@@ -4,23 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Librería Online — Libros</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
   <header class="app-header">
     <div class="marca">
-      <span class="icono">📚</span>
+      <span class="icono"><i class="fa-solid fa-book"></i></span>
       <span>Librería Online</span>
     </div>
     <nav class="app-nav">
       <a href="../index.html">Inicio</a>
       <a href="libros.html" class="activo">Libros</a>
       <a href="ventas.html">Ventas</a>
+      <a href="pedidos_admin.html">Pedidos</a>
     </nav>
   </header>
 
   <main class="contenedor">
-    <h1 class="titulo-seccion">📖 Gestión de libros</h1>
+    <h1 class="titulo-seccion"><i class="fa-solid fa-book"></i> Gestión de libros</h1>
     <p class="subtitulo-seccion">Registra, busca, edita y elimina libros del catálogo.</p>
 
     <div class="alerta" id="alerta"></div>
@@ -63,7 +68,7 @@
     </div>
 
     <div class="card">
-      <h2>🔎 Catálogo</h2>
+      <h2><i class="fa-solid fa-magnifying-glass"></i> Catálogo</h2>
       <div class="buscador">
         <input type="text" id="input-buscar" placeholder="Buscar por título, autor o categoría..." />
         <button class="btn btn-primario" id="btn-buscar">Buscar</button>
@@ -91,7 +96,7 @@
   </main>
 
   <footer>
-    Sistema de Venta de Libros · Arquitectura en capas · Flask + SQLite
+    Librería en línea · Control de ventas y pedidos
   </footer>
 
   <script src="../js/api.js"></script>

@@ -4,24 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Librería Online — Inicio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <header class="app-header">
     <div class="marca">
-      <span class="icono">📚</span>
+      <span class="icono"><i class="fa-solid fa-book"></i></span>
       <span>Librería Online</span>
     </div>
     <nav class="app-nav">
       <a href="index.html" class="activo">Inicio</a>
       <a href="pages/libros.html" id="nav-libros" style="display:none;">Libros</a>
       <a href="pages/ventas.html" id="nav-ventas" style="display:none;">Ventas</a>
+      <a href="pages/pedidos_admin.html" id="nav-pedidos" style="display:none;">Pedidos</a>
+      <a href="pages/pedido.html" id="nav-pedido-cliente" style="display:none;">Hacer pedido</a>
     </nav>
   </header>
 
   <main class="contenedor">
     <div class="card" id="card-login">
-      <h2>🔐 Acceder o crear cuenta</h2>
+      <h2><i class="fa-solid fa-lock"></i> Acceder o crear cuenta</h2>
       <p class="subtitulo-seccion">El administrador usa la cuenta fija. Cada cliente puede crear su propia cuenta.</p>
       <form id="form-login" class="form-grid">
         <div class="campo">
@@ -41,7 +47,7 @@
     </div>
 
     <div class="card" id="card-registro" style="display:none;">
-      <h2>📝 Crear nueva cuenta</h2>
+      <h2><i class="fa-solid fa-user-plus"></i> Crear nueva cuenta</h2>
       <p class="subtitulo-seccion">Ingresa tu correo y crea una contraseña para entrar como cliente.</p>
       <form id="form-registro" class="form-grid">
         <div class="campo">
@@ -61,36 +67,26 @@
     </div>
 
     <div id="contenido-app" style="display:none;">
-      <h1 class="titulo-seccion">👋 Bienvenido</h1>
-      <p class="subtitulo-seccion">Resumen general de tu librería.</p>
-
-    <div class="metricas" id="metricas"></div>
+      <h1 class="titulo-seccion">Bienvenido</h1>
+      <p class="subtitulo-seccion">NovaBooks</p>
 
     <div class="card">
-      <h2>📚 Catálogo de libros</h2>
+      <h2><i class="fa-solid fa-book-open"></i> Catálogo de libros</h2>
+      <div class="buscador">
+        <input type="text" id="input-buscar-catalogo" placeholder="Buscar por título, autor o categoría..." />
+        <button class="btn btn-primario" id="btn-buscar-catalogo">Buscar</button>
+      </div>
       <div id="contenedor-catalogo">
         <div class="estado-vacio">
-          <span class="icono">⏳</span>
+          <span class="icono"><i class="fa-solid fa-spinner fa-spin"></i></span>
           Cargando catálogo...
         </div>
       </div>
     </div>
 
     <div class="card">
-      <h2>🏆 Libros más vendidos</h2>
-      <div id="contenedor-mas-vendidos">
-        <div class="estado-vacio">
-          <span class="icono">⏳</span>
-          Cargando datos...
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>🚀 Accesos rápidos</h2>
-      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-        <a href="pages/libros.html" class="btn btn-primario" style="text-decoration:none;" id="link-libros">Gestionar libros</a>
-        <a href="pages/ventas.html" class="btn btn-acento" style="text-decoration:none;" id="link-ventas">Registrar una venta</a>
+      <h2><i class="fa-solid fa-rocket"></i> Accesos rápidos</h2>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
         <button class="btn btn-secundario" id="btn-cerrar-sesion" type="button">Cerrar sesión</button>
       </div>
     </div>
@@ -98,7 +94,7 @@
   </main>
 
   <footer>
-    Sistema de Venta de Libros · Arquitectura en capas · Flask + SQLite
+    Librería en línea · Control de ventas y pedidos
   </footer>
 
   <script src="js/api.js"></script>
@@ -108,14 +104,17 @@
     const cardLogin = document.getElementById("card-login");
     const cardRegistro = document.getElementById("card-registro");
     const contenidoApp = document.getElementById("contenido-app");
-    const linkLibros = document.getElementById("link-libros");
-    const linkVentas = document.getElementById("link-ventas");
     const navLibros = document.getElementById("nav-libros");
     const navVentas = document.getElementById("nav-ventas");
+    const navPedidos = document.getElementById("nav-pedidos");
+    const navPedidoCliente = document.getElementById("nav-pedido-cliente");
     const btnCerrarSesion = document.getElementById("btn-cerrar-sesion");
-    const metricas = document.getElementById("metricas");
     const contenedorCatalogo = document.getElementById("contenedor-catalogo");
+    const inputBuscarCatalogo = document.getElementById("input-buscar-catalogo");
+    const btnBuscarCatalogo = document.getElementById("btn-buscar-catalogo");
     let librosCatalogo = [];
+    let currentUser = null;
+    let periodoVentas = "total";
 
     function mostrarAlertaLogin(mensaje, tipo = "error") {
       alertaLogin.textContent = mensaje;
@@ -127,55 +126,27 @@
         cardLogin.style.display = "block";
         cardRegistro.style.display = "none";
         contenidoApp.style.display = "none";
-        linkLibros.style.display = "none";
-        linkVentas.style.display = "none";
         navLibros.style.display = "none";
         navVentas.style.display = "none";
+        navPedidos.style.display = "none";
+        navPedidoCliente.style.display = "none";
         return;
       }
+
       cardLogin.style.display = "none";
       cardRegistro.style.display = "none";
       contenidoApp.style.display = "block";
       if (user.role === "cliente") {
-        linkLibros.style.display = "none";
-        linkVentas.style.display = "none";
         navLibros.style.display = "none";
         navVentas.style.display = "none";
+        navPedidos.style.display = "none";
+        navPedidoCliente.style.display = "inline";
       } else {
-        linkLibros.style.display = "inline-block";
-        linkVentas.style.display = "inline-block";
         navLibros.style.display = "inline";
         navVentas.style.display = "inline";
+        navPedidos.style.display = "inline";
+        navPedidoCliente.style.display = "none";
       }
-    }
-
-    function renderizarMetricas(user, libros) {
-      if (user && user.role === "admin") {
-        metricas.innerHTML = `
-          <div class="metrica">
-            <div class="valor">${libros.length}</div>
-            <div class="etiqueta">Libros en catálogo</div>
-          </div>
-          <div class="metrica">
-            <div class="valor" id="valor-total-vendido">—</div>
-            <div class="etiqueta">Total vendido (S/)</div>
-          </div>
-          <div class="metrica">
-            <div class="valor" id="valor-total-ventas">—</div>
-            <div class="etiqueta">Ventas registradas</div>
-          </div>`;
-        return;
-      }
-
-      metricas.innerHTML = `
-        <div class="metrica">
-          <div class="valor">${libros.length}</div>
-          <div class="etiqueta">Libros en catálogo</div>
-        </div>
-        <div class="metrica">
-          <div class="valor">�</div>
-          <div class="etiqueta">Consulta disponibilidad y precios</div>
-        </div>`;
     }
 
     function renderizarCatalogo(libros) {
@@ -209,65 +180,24 @@
         </div>`;
     }
 
-    async function cargarDashboard(user) {
+    async function cargarDashboard(user, termino = "") {
       try {
-        const libros = await ApiLibros.listar();
-        renderizarMetricas(user, libros);
+        const libros = await ApiLibros.listar(termino);
         renderizarCatalogo(libros);
-
-        if (!user || user.role !== "admin") {
-          document.getElementById("contenedor-mas-vendidos").innerHTML = `
-            <div class="estado-vacio">
-              <span class="icono">📖</span>
-              El cliente puede ver el catálogo y consultar disponibilidad sin acceder a ventas.
-            </div>`;
-          return;
-        }
-
-        const resumenTotal = await ApiVentas.totalVendido();
-        document.getElementById("valor-total-vendido").textContent =
-          resumenTotal.total_vendido.toFixed(2);
-
-        const ventas = await ApiVentas.listar();
-        document.getElementById("valor-total-ventas").textContent = ventas.length;
-
-        const masVendidos = await ApiVentas.masVendidos(5);
-        const contenedor = document.getElementById("contenedor-mas-vendidos");
-
-        if (masVendidos.length === 0) {
-          contenedor.innerHTML = `
-            <div class="estado-vacio">
-              <span class="icono">📭</span>
-              Todavía no hay ventas registradas.
-            </div>`;
-          return;
-        }
-
-        contenedor.innerHTML = `
-          <div class="tabla-wrapper">
-            <table>
-              <thead>
-                <tr><th>Título</th><th>Unidades vendidas</th></tr>
-              </thead>
-              <tbody>
-                ${masVendidos.map(item => `
-                  <tr>
-                    <td>${item.titulo}</td>
-                    <td>${item.total_vendido}</td>
-                  </tr>
-                `).join("")}
-              </tbody>
-            </table>
-          </div>`;
       } catch (error) {
-        document.getElementById("contenedor-mas-vendidos").innerHTML = `
-          <div class="estado-vacio">
-            <span class="icono">⚠️</span>
-            No se pudo conectar con la API (${error.message}).<br/>
-            Verifica que el backend esté corriendo en http://127.0.0.1:5000
-          </div>`;
+        console.error("Error cargando catálogo:", error);
       }
     }
+
+    function actualizarBusqueda() {
+      const termino = inputBuscarCatalogo.value.trim();
+      cargarDashboard(currentUser, termino);
+    }
+
+    btnBuscarCatalogo.addEventListener("click", actualizarBusqueda);
+    inputBuscarCatalogo.addEventListener("keyup", (evento) => {
+      if (evento.key === "Enter") actualizarBusqueda();
+    });
 
     formLogin.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -277,6 +207,7 @@
       };
       try {
         const respuesta = await ApiAuth.login(datos);
+        currentUser = respuesta.user;
         actualizarVistaSegunRol(respuesta.user);
         await cargarDashboard(respuesta.user);
       } catch (error) {
@@ -306,6 +237,7 @@
       };
       try {
         const respuesta = await ApiAuth.register(datos);
+        currentUser = respuesta.user;
         document.getElementById("login-usuario").value = datos.username;
         document.getElementById("login-password").value = datos.password;
         actualizarVistaSegunRol(respuesta.user);
@@ -329,6 +261,7 @@
     async function verificarSesion() {
       try {
         const respuesta = await ApiAuth.me();
+        currentUser = respuesta.user;
         actualizarVistaSegunRol(respuesta.user);
         if (respuesta.user) {
           await cargarDashboard(respuesta.user);

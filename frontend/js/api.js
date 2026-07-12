@@ -45,7 +45,28 @@ const ApiLibros = {
 
 const ApiVentas = {
   registrar: (items) => _peticion("POST", "/ventas", { items }),
-  listar: () => _peticion("GET", "/ventas"),
-  totalVendido: () => _peticion("GET", "/ventas/resumen/total"),
+  listar: (periodo = "total", fecha = "") => {
+    const query = [];
+    if (periodo) query.push(`periodo=${encodeURIComponent(periodo)}`);
+    if (fecha) query.push(`fecha=${encodeURIComponent(fecha)}`);
+    const suffix = query.length ? `?${query.join("&")}` : "";
+    return _peticion("GET", `/ventas${suffix}`);
+  },
+  totalVendido: (periodo = "total", fecha = "") => {
+    const query = [];
+    if (periodo) query.push(`periodo=${encodeURIComponent(periodo)}`);
+    if (fecha) query.push(`fecha=${encodeURIComponent(fecha)}`);
+    const suffix = query.length ? `?${query.join("&")}` : "";
+    return _peticion("GET", `/ventas/resumen/total${suffix}`);
+  },
   masVendidos: (limite = 5) => _peticion("GET", `/ventas/resumen/mas-vendidos?limite=${limite}`),
+};
+
+const ApiPedidos = {
+  crearPedido: (datos) => _peticion("POST", "/pedidos", datos),
+  listarPedidos: (estado = "") => {
+    const query = estado ? `?estado=${encodeURIComponent(estado)}` : "";
+    return _peticion("GET", `/pedidos${query}`);
+  },
+  confirmarPedido: (pedidoId) => _peticion("POST", `/pedidos/${pedidoId}/confirmar`),
 };

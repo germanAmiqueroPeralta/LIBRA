@@ -19,9 +19,14 @@ const btnAgregarCarrito = document.getElementById("btn-agregar-carrito");
 const contenedorCarrito = document.getElementById("contenedor-carrito");
 const btnConfirmarVenta = document.getElementById("btn-confirmar-venta");
 const contenedorHistorial = document.getElementById("contenedor-historial");
+const valorTotalFiltrado = document.getElementById("valor-total-filtrado");
+const selectPeriodoHistorial = document.getElementById("select-periodo-historial");
+const inputFechaHistorial = document.getElementById("input-fecha-historial");
+const btnFiltrarHistorial = document.getElementById("btn-filtrar-historial");
 
 let librosDisponibles = [];
 let carrito = []; // [{isbn, titulo, cantidad, precio}]
+let periodoHistorial = "total";
 
 function mostrarAlerta(mensaje, tipo = "exito") {
   const alerta = document.getElementById("alerta");
@@ -54,7 +59,7 @@ function renderizarCarrito() {
   if (carrito.length === 0) {
     contenedorCarrito.innerHTML = `
       <div class="estado-vacio">
-        <span class="icono">🛍️</span>
+        <span class="icono"><i class="fa-solid fa-bag-shopping"></i></span>
         El carrito está vacío.
       </div>`;
     btnConfirmarVenta.style.display = "none";
@@ -137,14 +142,19 @@ btnConfirmarVenta.addEventListener("click", async () => {
   }
 });
 
-async function cargarHistorial() {
+async function cargarHistorial(periodo = "total", fecha = "") {
   try {
-    const ventas = await ApiVentas.listar();
+    const [ventas, resumen] = await Promise.all([
+      periodo === "total" && !fecha ? ApiVentas.listar() : ApiVentas.listar(periodo, fecha),
+      ApiVentas.totalVendido(periodo, fecha),
+    ]);
+
+    valorTotalFiltrado.textContent = resumen.total_vendido.toFixed(2);
 
     if (ventas.length === 0) {
       contenedorHistorial.innerHTML = `
         <div class="estado-vacio">
-          <span class="icono">📭</span>
+          <span class="icono"><i class="fa-solid fa-box-open"></i></span>
           Todavía no hay ventas registradas.
         </div>`;
       return;
@@ -154,21 +164,50 @@ async function cargarHistorial() {
       <div class="tabla-wrapper">
         <table>
           <thead>
-            <tr><th>#</th><th>Fecha</th><th>Detalle</th><th>Total</th></tr>
+            <tr><th>#</th><th>Fecha</th><th>Total</th><th>Acciones</th></tr>
           </thead>
           <tbody>
             ${ventas.map(venta => `
               <tr>
                 <td>${venta.id}</td>
                 <td>${new Date(venta.fecha).toLocaleString("es-PE")}</td>
-                <td>${venta.detalles.map(d => `${d.isbn} × ${d.cantidad}`).join(", ")}</td>
                 <td>S/ ${venta.total.toFixed(2)}</td>
+                <td>
+                  <div class="acciones-fila">
+                    <button class="btn btn-secundario btn-ver-detalle" type="button" data-venta-id="${venta.id}">Ver</button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="detalle-venta-row" id="detalle-venta-${venta.id}" style="display:none;">
+                <td colspan="4">
+                  <div class="detalle-venta-contenido">
+                    ${venta.detalles.map(d => `
+                      <div>
+                        <strong>${d.titulo}</strong>: ${d.cantidad}
+                      </div>
+                    `).join("")}
+                  </div>
+                </td>
               </tr>
             `).join("")}
           </tbody>
         </table>
       </div>`;
+
+    const botonesVerDetalle = contenedorHistorial.querySelectorAll(".btn-ver-detalle");
+    botonesVerDetalle.forEach(boton => {
+      boton.addEventListener("click", () => {
+        const ventaId = boton.dataset.ventaId;
+        const filaDetalle = document.getElementById(`detalle-venta-${ventaId}`);
+        if (!filaDetalle) return;
+
+        const estaVisible = filaDetalle.style.display === "table-row";
+        filaDetalle.style.display = estaVisible ? "none" : "table-row";
+        boton.textContent = estaVisible ? "Ver" : "Ocultar";
+      });
+    });
   } catch (error) {
+    valorTotalFiltrado.textContent = "0.00";
     contenedorHistorial.innerHTML = `
       <div class="estado-vacio">
         <span class="icono">⚠️</span>
@@ -176,4 +215,39 @@ async function cargarHistorial() {
       </div>`;
   }
 }
+
+function ajustarTipoFechaHistorial() {
+  if (periodoHistorial === "dia") {
+    inputFechaHistorial.type = "date";
+    inputFechaHistorial.value = "";
+  } else if (periodoHistorial === "mes") {
+    inputFechaHistorial.type = "month";
+    inputFechaHistorial.value = "";
+  } else if (periodoHistorial === "anio") {
+    inputFechaHistorial.type = "number";
+    inputFechaHistorial.min = "1900";
+    inputFechaHistorial.max = "2100";
+    inputFechaHistorial.placeholder = "2026";
+    inputFechaHistorial.value = "";
+  } else {
+    inputFechaHistorial.type = "date";
+    inputFechaHistorial.value = "";
+  }
+}
+
+btnFiltrarHistorial.addEventListener("click", () => {
+  periodoHistorial = selectPeriodoHistorial.value;
+  let fecha = inputFechaHistorial.value;
+  if (periodoHistorial !== "total" && !fecha) {
+    mostrarAlerta("Selecciona una fecha válida para filtrar.", "error");
+    return;
+  }
+
+  cargarHistorial(periodoHistorial, fecha);
+});
+
+selectPeriodoHistorial.addEventListener("change", (event) => {
+  periodoHistorial = event.target.value;
+  ajustarTipoFechaHistorial();
+});
 
